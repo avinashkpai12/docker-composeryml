@@ -1,0 +1,124 @@
+version: '2.1'
+services:
+
+ mysqldb:
+  image: mysql
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: root123
+  ports:
+   - 3306:3306
+  network_mode: host
+  hostname: localhost
+  container_name: mysql_docker
+  volumes:
+   - data:/var/lib/mysql
+
+
+ crudj2e:
+  image: shriramya963/crudjee:1.0.5
+  container_name: crudj2e_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  depends_on:
+   - mysqldb
+  ports:
+   - 8080:8080
+
+ mongo:
+  image: mongo:3.4-jessie
+  ports:
+   - 27017:27017
+  container_name: mongo_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  volumes:
+   - ./data/db:/data/db
+
+ musicnode:
+  image: avinashkpai12/musicappnode:1.0.6
+  container_name: musicnode_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  depends_on:
+   - mongo
+  ports:
+   - 8082:8082
+  healthcheck:
+   test: "exit 0"
+ 
+ loginservice:
+  image: rohith6991/login:1.0.1
+  container_name: login_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  depends_on:
+   - mysqldb
+  ports:
+   - 8090:8090
+  healthcheck:
+   test: "exit 0"
+
+
+
+ kafkaservice:
+  image: landoop/fast-data-dev
+  container_name: kfka_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  ports: 
+   - 2181:2181
+   - 8030:8030
+   - 8081:8081
+   - 8084:8084
+   - 8083:8083
+   - 9092:9092
+  environment:
+   WEB_PORT: 8030
+   REST_PORT: 8084
+  healthcheck:
+   test: "exit 0"
+
+ datacollectorservice:
+  image: shriramya963/datacollector:1.0.2
+  container_name: datacol_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  ports:
+   - 8001:8001
+  healthcheck:
+   test: "exit 0"
+
+ signupservice:
+  image: swethadevid/syscopsignup:1.0.1
+  container_name: signup_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  depends_on:
+   - mongo
+  ports:
+   - 8096:8096
+  healthcheck:
+   test: "exit 0"
+
+ testpythonservice:
+  image: sushantanshu/syscop-python-test:1.0.0
+  container_name: testpython_container
+  restart: always
+  network_mode: host
+  hostname: localhost
+  ports:
+   - 8002:8002
+  healthcheck:
+   test: "exit 0"
+  
+
+volumes:
+ data:
