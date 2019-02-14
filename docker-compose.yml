@@ -51,13 +51,15 @@ services:
    test: "exit 0"
  
  loginservice:
-  image: rohith6991/login:1.0.1
+  image: rohith6991/login:2.0.6
   container_name: login_docker
   restart: always
   network_mode: host
   hostname: localhost
   depends_on:
    - mysqldb
+   - eureka
+   - apigateway
   ports:
    - 8090:8090
   healthcheck:
@@ -90,7 +92,7 @@ services:
    test: "exit 0"
 
  datacollectorservice:
-  image: shriramya963/datacollector:1.0.3
+  image: shriramya963/datacollector:1.0.5
   container_name: datacol_docker
   restart: always
   network_mode: host
@@ -101,13 +103,15 @@ services:
    test: "exit 0"
 
  signupservice:
-  image: swethadevid/syscopsignup:1.0.2
+  image: swethadevid/syscopsignup:2.0.2
   container_name: signup_docker
   restart: always
   network_mode: host
   hostname: localhost
   depends_on:
    - mongo
+   - eureka
+   - apigateway
   ports:
    - 8096:8096
   healthcheck:
@@ -130,12 +134,47 @@ services:
   restart: always
   network_mode: host
   hostname: localhost
- # depends_on:
+  #depends_on:
   # - kafkaservice
   ports:
    - 8091:8091
   healthcheck:
    test: "exit 0"  
+
+
+ frontend:
+  image: shriramya963/frontend:1.0.4
+  container_name: frontend_docker
+  restart: always
+  network_mode: host
+  hostname: localhost
+  ports:
+   - 8004:8004
+  healthcheck:
+   test: "exit 0"
+
+ eureka:
+  image: shriramya963/eureka:1.0.4
+  container_name: eurekaserver_docker
+  network_mode: host
+  restart : always
+  ports:
+   - 8010:8010
+  healthcheck:
+   test: "exit 0"
+
+
+ apigateway:
+  image: shriramya963/apigateway:1.0.0
+  container_name: apigateway_docker
+  restart: always
+  network_mode: host
+  depends_on:
+   - eureka
+  ports:
+   - 8095:8095
+ 
+
 
 volumes:
  data:
