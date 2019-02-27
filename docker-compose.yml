@@ -16,7 +16,7 @@ services:
 
 
  crudj2e:
-  image: shriramya963/crudjee:1.0.5
+  image: shriramya963/crudjee:1.0.6
   container_name: crudj2e_docker
   restart: always
   network_mode: host
@@ -38,7 +38,7 @@ services:
    - ./data/db:/data/db
 
  musicnode:
-  image: avinashkpai12/musicappnode:1.0.6
+  image: avinashkpai12/musicappnode:1.0.7
   container_name: musicnode_docker
   restart: always
   network_mode: host
@@ -143,7 +143,7 @@ services:
 
 
  frontend:
-  image: shriramya963/frontend:1.0.4
+  image: shriramya963/frontend:2.0.0
   container_name: frontend_docker
   restart: always
   network_mode: host
